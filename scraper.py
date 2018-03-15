@@ -85,7 +85,7 @@ def convert_mth_strings ( mth_string ):
 #### VARIABLES 1.0
 
 entity_id = "NFTRWF_MTWNFT_gov"
-url = "http://www.mtw.nhs.uk/finance/supplier-transactions.asp"
+url = "https://www.mtw.nhs.uk/about-us/our-quality-story/finance/"
 errors = 0
 data = []
 ua = {"User-agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11"}
@@ -99,16 +99,17 @@ soup = BeautifulSoup(html.text, 'lxml')
 
 #### SCRAPE DATA
 
-links = soup.find('div', 'accordion').find_all('a')
-for link in links:
-    if '.csv' in link['href'] or '.xls' in link['href'] or '.xlsx' in link['href']:
-        if 'http://' in link['href']:
+accordions = soup.find_all('div', 'accordion-panel-content')
+for accordion in accordions:
+    links = accordion.find_all('a')
+    for link in links:
+        if '.csv' in link['href'] or '.xls' in link['href'] or '.xlsx' in link['href']:
             url = link['href']
-        title = link.text.strip()
-        csvMth = title[:3]
-        csvYr = title[-4:]
-        csvMth = convert_mth_strings(csvMth.upper())
-        data.append([csvYr, csvMth, url])
+            title = link.text.strip()
+            csvMth = title[:3]
+            csvYr = title[-4:]
+            csvMth = convert_mth_strings(csvMth.upper())
+            data.append([csvYr, csvMth, url])
 
 
 #### STORE DATA 1.0
